@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+</head>
+
+
+<body>
+    <form action="/todo" method='post'>
+        Enter a new todo:
+        <input name="task" placeholder="eg. Buy Milk" />
+        <button>Add</button>
+    </form>
+    {% if todos_count > 0 %}
+    <h1>Your Todos : </h1>
+    <ul>
+        {% for todo in todos %}
+        <li>
+            <input name="todo" value={{todo}} style="display:none">
+            <h4>{{todo}}</h4>
+            <button id="delete" value={{todo}}> DELETE</button>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <h1>You have no Todos</h1>
+    {% endif %}
+</body>
+
+</html>
+<script>
+    document.querySelector("#delete").addEventListener("click",async e=>{
+        let todo = e.toElement.value
+        console.log(e)
+        await fetch('http://localhost:5000/todo', {
+            method: "delete",
+            headers:{
+                'Access-Control-Allow-Origin':'*'
+            },
+            body: {
+                todo
+            }
+        }).then(() => {
+            window.reload()
+        })
+    })
+</script>
